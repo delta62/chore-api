@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "pretty": true,
+    "target": "es5",
+    "outDir": "dist"
+  },
+  "exclude": [
+    "node_modules",
+    "typings"
+  ]
+}
