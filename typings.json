@@ -6,6 +6,7 @@
   },
   "ambientDependencies": {
     "bunyan": "registry:dt/bunyan#0.0.0+20160412155112",
+    "config": "registry:dt/config#0.0.0+20160317120654",
     "es6-shim": "registry:dt/es6-shim#0.31.2+20160317120654",
     "node": "registry:dt/node#4.0.0+20160423143914",
     "restify": "registry:dt/restify#2.0.0+20160316155526"

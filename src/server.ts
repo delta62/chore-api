@@ -1,31 +1,57 @@
 /// <reference path="../typings/main.d.ts" />
 
-import 'reflect-metadata';
-import * as restify from 'restify';
-import * as bunyan from 'bunyan';
 import { ChoreBrowseHandler } from './handlers/chore-browse';
+import { EndpointRegistrar } from './handlers/endpoint-registrar';
+import { IConfig } from 'config';
+import { Server, Request, Response, Next } from 'restify';
+import { Logger } from 'bunyan';
+import {
+  Injectable,
+  Inject
+} from './di';
 
-let log = bunyan.createLogger({ name: 'chores' });
-let server: restify.Server = restify.createServer();
+@Injectable()
+export class ChoreServer {
+  constructor(
+    @Inject('config') private config: IConfig,
+    @Inject('restify.Server') private server: Server,
+    @Inject('bunyan.Logger') private log: Logger,
+    private endpointRegistrar: EndpointRegistrar) { }
 
-server.listen(8080);
-log.info('Hello world');
+  run(): void {
+    let port = this.config.get('port');
+    this.server.listen(port);
+    this.log.info('Hello world');
 
-server.post('/chores', new ChoreBrowseHandler().post);
+    this.endpointRegistrar.registerEndpoints({
+        '/chores': ChoreBrowseHandler
+    });
 
-server.on('after', (req, res, route, err) => {
-  logRequest(req, res, err);
-});
+    this.server.on('after', (req, res, route, err) => {
+      this.logRequest(req, res, err);
+    });
 
-server.on('uncaughtException', (req, res, route, err) => {
-  logRequest(req, res, err);
-  res.send(err);
-});
-
-function logRequest(req, res, err): void {
-  let level = err ? 'error' : 'info';
-  if (err) {
-    log.error(err);
+    this.server.on('uncaughtException', (req, res, route, err) => {
+      this.logRequest(req, res, err);
+      res.statusCode = 500;
+      res.send(err);
+    });
   }
-  log[level]({ method: req.method, statusCode: res.statusCode, path: req.path });
+
+  private logRequest(req: Request, res: Response, err: any): void {
+    let level = err ? 'error' : 'info';
+    if (err) {
+      this.log.error(err);
+    }
+
+    this.log[level]({
+      method: req.method,
+      statusCode: res.statusCode,
+      path: req.path
+    });
+  }
 }
+
+export var SERVER_PROVIDERS = [
+  ChoreServer
+];
