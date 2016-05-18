@@ -3,8 +3,11 @@ import { Observable } from 'rxjs';
 import {
   MongoClient,
   Db as MongoDb,
-  Collection
+  Collection,
+  Cursor
 } from 'mongodb';
+
+type DbFindFn<T> = (collection: Collection) => Observable<T>;
 
 @Injectable()
 export class Db {
@@ -21,9 +24,10 @@ export class Db {
     };
   }
 
-  find(): (collection: Collection) => Observable<Array<any>> {
+  find<T>(criteria?: Object, projection?: Object): (collection: Collection) => Observable<Array<any>> {
     return (collection: Collection): Observable<Array<any>> => {
-      let cb: Function = collection.find().toArray.bind(collection);
+      let cursor: Cursor = collection.find(criteria, projection);
+      let cb: Function = cursor.toArray.bind(cursor);
       return Observable.bindNodeCallback<Array<any>>(cb)();
     };
   }

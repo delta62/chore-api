@@ -13,6 +13,6 @@ export class ChoreBrowseHandler {
       .connect('mongodb://localhost:27017/chores')
       .flatMap(this.db.getCollection('chores'))
       .flatMap(this.db.find())
-      .subscribe(res.send, next);
+      .subscribe(res.send.bind(res), next);
   }
 }
