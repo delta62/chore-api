@@ -45,7 +45,7 @@ export class ChoreServer {
     this.log[level]({
       method: req.method,
       statusCode: res.statusCode,
-      path: req.path
+      path: req.path()
     });
   }
 }

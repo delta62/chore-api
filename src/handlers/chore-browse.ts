@@ -12,7 +12,7 @@ export class ChoreBrowseHandler {
     this.db
       .connect('mongodb://localhost:27017/chores')
       .flatMap(this.db.getCollection('chores'))
-      .flatMap(this.db.find())
-      .subscribe(res.send.bind(res), next);
+      .flatMap(this.db.find({ }, { _id: 0 }))
+      .subscribe(res.send.bind(res), next, next);
   }
 }
