@@ -31,4 +31,11 @@ export class Db {
       return Observable.bindNodeCallback<Array<any>>(cb)();
     };
   }
+
+  insert(doc: any): (collection: Collection) => Observable<void> {
+    return (collection: Collection): Observable<void> => {
+      let cb: Function = collection.insertOne.bind(collection);
+      return Observable.bindNodeCallback<void>(cb)(doc);
+    };
+  }
 }

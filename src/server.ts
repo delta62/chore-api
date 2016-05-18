@@ -1,19 +1,19 @@
-import { ChoreBrowseHandler } from './handlers/chore-browse';
-import { EndpointRegistrar } from './handlers/endpoint-registrar';
-import { IConfig } from 'config';
-import { Server, Request, Response, Next } from 'restify';
-import { Logger } from 'bunyan';
 import {
-  Injectable,
-  Inject
-} from '@angular/core';
+  ChoreBrowseHandler,
+  UserBrowseHandler,
+  EndpointRegistrar
+} from './handlers';
+import { IConfig } from 'config';
+import { Server, Request, Response, Next, bodyParser } from 'restify';
+import { Logger } from 'bunyan';
+import { Injectable, Inject } from '@angular/core';
 
 @Injectable()
 export class ChoreServer {
   constructor(
-    @Inject('config') private config: IConfig,
+    @Inject('config')         private config: IConfig,
     @Inject('restify.Server') private server: Server,
-    @Inject('bunyan.Logger') private log: Logger,
+    @Inject('bunyan.Logger')  private log: Logger,
     private endpointRegistrar: EndpointRegistrar) { }
 
   run(): void {
@@ -21,8 +21,11 @@ export class ChoreServer {
     this.server.listen(port);
     this.log.info('Hello world');
 
+    this.server.use(bodyParser());
+
     this.endpointRegistrar.registerHandlers({
-        '/chores': ChoreBrowseHandler
+        '/chores': ChoreBrowseHandler,
+        '/users':  UserBrowseHandler
     });
 
     this.server.on('after', (req, res, route, err) => {
