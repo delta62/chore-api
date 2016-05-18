@@ -1,5 +1,3 @@
-/// <reference path="../typings/main.d.ts" />
-
 import 'reflect-metadata';
 import { Injector, bootstrap } from './di';
 import { ChoreServer } from './server';

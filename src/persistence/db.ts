@@ -1,4 +1,4 @@
-import { Injectable } from '../di';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   MongoClient,
@@ -11,20 +11,20 @@ export class Db {
   connect(uri: string): Observable<MongoDb> {
     let client = new MongoClient();
     let cb: Function = client.connect.bind(client);
-    return Observable.bindNodeCallback(cb)(uri);
+    return Observable.bindNodeCallback<MongoDb>(cb)(uri);
   }
 
   getCollection(collectionName: string): (db: MongoDb) => Observable<Collection> {
     return (db: MongoDb): Observable<Collection> => {
       let cb: Function = db.collection.bind(db);
-      return Observable.bindNodeCallback(cb)(collectionName);
+      return Observable.bindNodeCallback<Collection>(cb)(collectionName);
     };
   }
 
   find(): (collection: Collection) => Observable<Array<any>> {
     return (collection: Collection): Observable<Array<any>> => {
       let cb: Function = collection.find().toArray.bind(collection);
-      return Observable.bindNodeCallback(cb)();
+      return Observable.bindNodeCallback<Array<any>>(cb)();
     };
   }
 }

@@ -1,6 +1,4 @@
-/// <reference path="../../typings/main.d.ts" />
-
-import { Injectable } from '../di';
+import { Injectable } from '@angular/core';
 import { Endpoint } from './endpoint';
 import { Request, Response, Next } from 'restify';
 import { Db } from '../persistence/db';

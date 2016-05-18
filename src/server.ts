@@ -1,5 +1,3 @@
-/// <reference path="../typings/main.d.ts" />
-
 import { ChoreBrowseHandler } from './handlers/chore-browse';
 import { EndpointRegistrar } from './handlers/endpoint-registrar';
 import { IConfig } from 'config';
@@ -8,7 +6,7 @@ import { Logger } from 'bunyan';
 import {
   Injectable,
   Inject
-} from './di';
+} from '@angular/core';
 
 @Injectable()
 export class ChoreServer {
@@ -23,7 +21,7 @@ export class ChoreServer {
     this.server.listen(port);
     this.log.info('Hello world');
 
-    this.endpointRegistrar.registerEndpoints({
+    this.endpointRegistrar.registerHandlers({
         '/chores': ChoreBrowseHandler
     });
 
