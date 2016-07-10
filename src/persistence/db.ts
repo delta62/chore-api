@@ -38,4 +38,12 @@ export class Db {
       return Observable.bindNodeCallback<void>(cb)(doc);
     };
   }
+
+  createIndex(field: string): (collection: Collection) => Observable<void> {
+    return (collection: Collection): Observable<void> => {
+      let cb: Function = collection.createIndex.bind(collection);
+      let opts: Object = { unique: true };
+      return Observable.bindNodeCallback<void>(cb)(field, opts);
+    }
+  }
 }
